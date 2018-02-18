@@ -24,6 +24,7 @@ class HistoricCSVDataHandler(DataHandler):
         self.symbol_list = symbol_list
 
         self.symbol_data = {}
+        self.symbol_dataframe = {}
         self.latest_symbol_data = {}
         self.continue_backtest = True
 
@@ -42,7 +43,8 @@ class HistoricCSVDataHandler(DataHandler):
             self.latest_symbol_data[symbol] = []
 
         for symbol in self.symbol_list:
-            self.symbol_data[symbol] = self.symbol_data[symbol].reindex(index=combined_index, method='pad').iterrows()
+            self.symbol_dataframe[symbol] = self.symbol_data[symbol].reindex(index=combined_index, method='pad')
+            self.symbol_data[symbol] = self.symbol_dataframe[symbol].iterrows()
 
     def _get_new_data(self, symbol):
         for row in self.symbol_data[symbol]:
@@ -65,3 +67,16 @@ class HistoricCSVDataHandler(DataHandler):
                 self.latest_symbol_data[symbol].append(data)
 
         self.events.put(MarketEvent())
+
+    def create_baseline_dataframe(self):
+        dataframe = None
+        for symbol in self.symbol_list:
+            df = self.symbol_dataframe[symbol]
+            if dataframe == None:
+                dataframe = pd.DataFrame(df['close'])
+                dataframe.columns = [symbol]
+            else:
+                dataframe[symbol] = pd.DataFrame(df['close'])
+            dataframe[symbol] = dataframe[symbol].pct_change()
+            dataframe[symbol] = (1.0 + dataframe[symbol]).cumprod()
+        return dataframe
