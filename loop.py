@@ -7,7 +7,7 @@ from portfolio import NaivePortfolio
 from execution import SimulateExecutionHandler
 
 events = queue.Queue()
-data = HistoricCSVDataHandler(events, '~/Code/python/backtesting/', ['AAPL'])
+data = HistoricCSVDataHandler(events, '<path>/backtester/csv/', ['AAPL'])
 strategy = MovingAveragesStrategy(data, events)
 portfolio = NaivePortfolio(data, events, '2017-01-01')
 broker = SimulateExecutionHandler(events)
