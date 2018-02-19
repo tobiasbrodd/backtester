@@ -3,14 +3,14 @@ import time
 from datetime import datetime
 from event import MarketEvent, SignalEvent, OrderEvent, FillEvent
 from data import HistoricCSVDataHandler
-from strategy import BuyAndHoldStrategy, MovingAveragesStrategy
+from strategy import BuyAndHoldStrategy, MovingAveragesStrategy, StopLossStrategy
 from portfolio import NaivePortfolio
 from execution import SimulateExecutionHandler
 
 events = queue.Queue()
-data = HistoricCSVDataHandler(events, '~/Code/python/backtester/csv/', ['AAPL'])
-portfolio = NaivePortfolio(data, events, datetime.strptime('2017-01-03', '%Y-%m-%d'))
-strategy = MovingAveragesStrategy(data, events, portfolio)
+data = HistoricCSVDataHandler(events, '~/Code/python/backtester/csv/', ['SNP'])
+portfolio = NaivePortfolio(data, events)
+strategy = MovingAveragesStrategy(data, events, portfolio, 100, 200)
 broker = SimulateExecutionHandler(events)
 
 while True:

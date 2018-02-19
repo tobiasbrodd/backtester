@@ -18,11 +18,10 @@ class Portfolio(metaclass=ABCMeta):
         raise NotImplementedError
 
 class NaivePortfolio(Portfolio):
-    def __init__(self, data, events, start_date, initial_capital=100000.0):
+    def __init__(self, data, events, initial_capital=100000.0):
         self.data = data
         self.events = events
         self.symbol_list = self.data.symbol_list
-        self.start_date = start_date
         self.initial_capital = initial_capital
 
         self.all_positions = []
@@ -141,8 +140,8 @@ class NaivePortfolio(Portfolio):
     def plot_performance(self):
         self.create_equity_curve_dataframe()
         dataframe = self.data.create_baseline_dataframe()
-        dataframe['equity_curve'] = self.equity_curve['equity_curve']
-        dataframe = dataframe * 100
+        dataframe['Equity Curve'] = self.equity_curve['equity_curve']
+        dataframe = (dataframe * 100) - 100
         style.use('ggplot')
         dataframe.plot()
         plt.title('Performance')

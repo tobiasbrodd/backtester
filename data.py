@@ -33,7 +33,7 @@ class HistoricCSVDataHandler(DataHandler):
     def _open_convert_csv_files(self):
         combined_index = None
         for symbol in self.symbol_list:
-            self.symbol_data[symbol] = pd.io.parsers.read_csv(os.path.join(self.csv_dir, symbol + '.csv'), header=0, index_col=0, names=['datetime','open','high','low','close','adj_close','volume'])
+            self.symbol_data[symbol] = pd.io.parsers.read_csv(os.path.join(self.csv_dir, symbol + '.csv'), header=0, index_col=0, parse_dates=True)
 
             if combined_index is None:
                 combined_index = self.symbol_data[symbol].index
@@ -48,7 +48,7 @@ class HistoricCSVDataHandler(DataHandler):
 
     def _get_new_data(self, symbol):
         for row in self.symbol_data[symbol]:
-            yield tuple([symbol, datetime.strptime(row[0], '%Y-%m-%d'), row[1][0], row[1][1], row[1][2], row[1][3], row[1][4], row[1][5]])
+            yield tuple([symbol, row[0], row[1][0], row[1][1], row[1][2], row[1][3], row[1][4], row[1][5]])
 
     def get_latest_data(self, symbol, N=1):
         try:
@@ -73,10 +73,11 @@ class HistoricCSVDataHandler(DataHandler):
         for symbol in self.symbol_list:
             df = self.symbol_dataframe[symbol]
             if dataframe == None:
-                dataframe = pd.DataFrame(df['close'])
+                dataframe = pd.DataFrame(df['Adj Close'])
                 dataframe.columns = [symbol]
             else:
-                dataframe[symbol] = pd.DataFrame(df['close'])
+                dataframe[symbol] = pd.DataFrame(df['Adj Close'])
             dataframe[symbol] = dataframe[symbol].pct_change()
             dataframe[symbol] = (1.0 + dataframe[symbol]).cumprod()
+
         return dataframe
