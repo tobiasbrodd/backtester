@@ -2,7 +2,7 @@
 An event-driven backtester
 
 ## About
-This backtester is based on a guide written by Quantstart's [Michael Halls-Moore](http://www.quantstart.com/about-mike/) on how to write an event-driven backtester. Improvements to the code in the guide made by [Douglas Denhartog](https://github.com/denhartog/quantstart-backtester) has also been incorporated. The code has then been modified by me to actually run and include more features.
+This backtesting suite is based on a guide written by Quantstart's [Michael Halls-Moore](http://www.quantstart.com/about-mike/) on how to write an event-driven backtester. Improvements to the code in the guide made by [Douglas Denhartog](https://github.com/denhartog/quantstart-backtester) has also been incorporated. The code has then been modified by me to actually run and include more features.
 
 **Guide:**
 1. [Event-Driven Backtesting with Python - Part I](http://www.quantstart.com/articles/Event-Driven-Backtesting-with-Python-Part-I)
