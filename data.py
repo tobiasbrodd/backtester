@@ -28,12 +28,15 @@ class HistoricCSVDataHandler(DataHandler):
         self.latest_symbol_data = {}
         self.continue_backtest = True
 
+        self.time_col = 1
+        self.price_col = 6
+
         self._open_convert_csv_files()
 
     def _open_convert_csv_files(self):
         combined_index = None
         for symbol in self.symbol_list:
-            self.symbol_data[symbol] = pd.io.parsers.read_csv(os.path.join(self.csv_dir, symbol + '.csv'), header=0, index_col=0, parse_dates=True)
+            self.parse_nasdaq_csv(symbol)
 
             if combined_index is None:
                 combined_index = self.symbol_data[symbol].index
@@ -81,3 +84,18 @@ class HistoricCSVDataHandler(DataHandler):
             dataframe[symbol] = (1.0 + dataframe[symbol]).cumprod()
 
         return dataframe
+
+    def parse_yahoo_csv(self, symbol):
+        self.symbol_data[symbol] = pd.read_csv(os.path.join(self.csv_dir, symbol + '.csv'), header=0, index_col=0, parse_dates=True)
+
+    def parse_nasdaq_csv(self, symbol):
+        tmp = pd.read_csv(os.path.join(self.csv_dir, symbol + '.csv'), header=0, index_col=0, parse_dates=True).iloc[::-1]
+        self.symbol_data[symbol] = pd.DataFrame(tmp['Closing price'])
+        self.symbol_data[symbol].columns = ['Close']
+        self.symbol_data[symbol]['Open'] = tmp['Closing price']
+        self.symbol_data[symbol]['High'] = tmp['High price']
+        self.symbol_data[symbol]['Low'] = tmp['Low price']
+        self.symbol_data[symbol]['Close'] = tmp['Closing price']
+        self.symbol_data[symbol]['Adj Close'] = tmp['Closing price']
+        self.symbol_data[symbol]['Volume'] = tmp['Total volume']
+        self.symbol_data[symbol] = self.symbol_data[symbol][self.symbol_data[symbol]['Close'] > 0.0]

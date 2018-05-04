@@ -8,9 +8,12 @@ from portfolio import NaivePortfolio
 from execution import SimulateExecutionHandler
 
 events = queue.Queue()
-data = HistoricCSVDataHandler(events, '~/Code/python/backtester/csv/', ['SNP'])
-portfolio = NaivePortfolio(data, events)
+data = HistoricCSVDataHandler(events, 'csv/', ['OMXS30'])
+portfolio = NaivePortfolio(data, events, '', initial_capital=100)
+# strategy = BuyAndHoldStrategy(data, events, portfolio)
 strategy = MovingAveragesStrategy(data, events, portfolio, 100, 200)
+# strategy = StopLossStrategy(data, events, portfolio)
+portfolio.strategy_name = strategy.name
 broker = SimulateExecutionHandler(events)
 
 while True:
