@@ -19,7 +19,7 @@ This backtesting suite is based on a guide written by Quantstart's [Michael Hall
 You can define a strategy by implementing the Strategy class found in **strategy.py**. There also exists three predefined strategies in **strategy.py**.
 
 ### Backtest a Strategy
-In order to choose strategy to backtest, you have to change the used strategy class **loop.py**. You can also specify which CSV files/symbols that should be used in the backtesting suite by changing the CSV directory path and symbols in the same python file.  
+In order to choose strategy to backtest, you have to change the strategy class used in **loop.py**. You can also specify which CSV files/symbols that should be used in the backtesting suite by changing the CSV directory path and symbols in the same python file.  
 **Note:** The specified CSV files must have the same format as CSV files downloaded from Yahoo Finance. If the CSV files have another format, they need to be converted to Yahoo's format.  
 **Special Case:** If the specified CSV files were downloaded from Nasdaq, you can change the parser in data.py to the Nasdaq CSV parser.  
 
