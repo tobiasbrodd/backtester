@@ -15,5 +15,6 @@ class SimulateExecutionHandler(ExecutionHandler):
 
     def execute_order(self, event):
         if event.type == 'ORDER':
+            print(event.type, event.symbol, event.quantity, event.direction)
             fill_event = FillEvent(datetime.utcnow(), event.symbol, 'ARCA', event.quantity, event.direction, 0)
             self.events.put(fill_event)
