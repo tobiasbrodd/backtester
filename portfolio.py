@@ -98,9 +98,9 @@ class NaivePortfolio(Portfolio):
         current_quantity = self.current_positions[symbol]
         order_type = 'MKT'
 
-        if direction == 'LONG' and current_quantity == 0:
+        if direction == 'LONG':
             order = OrderEvent(symbol, order_type, market_quantity, 'BUY')
-        if direction == 'SHORT' and current_quantity == 0:
+        if direction == 'SHORT':
             order = OrderEvent(symbol, order_type, market_quantity, 'SELL')
 
         if direction == 'EXIT' and current_quantity > 0:
