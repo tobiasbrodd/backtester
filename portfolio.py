@@ -121,6 +121,7 @@ class NaivePortfolio(Portfolio):
         curve['returns'] = curve['total'].pct_change()
         curve['equity_curve'] = (1.0 + curve['returns']).cumprod()
         self.equity_curve = curve
+        self.holdings_curve = curve['total']
 
     def output_summary_stats(self):
         self.create_equity_curve_dataframe()
@@ -138,14 +139,25 @@ class NaivePortfolio(Portfolio):
 
         return stats
 
+    def plot_holdings(self):
+        holdings_fig, holdings_ax = plt.subplots()
+        self.holdings_curve.plot(ax=holdings_ax)
+        holdings_ax.set_title('Holdings')
+        holdings_ax.set_xlabel('Time')
+        holdings_ax.set_ylabel('Total')
+
     def plot_performance(self):
-        self.create_equity_curve_dataframe()
-        dataframe = self.data.create_baseline_dataframe()
-        dataframe[self.strategy_name] = self.equity_curve['equity_curve']
-        dataframe = (dataframe * 100) - 100
+        performance_df = self.data.create_baseline_dataframe()
+        performance_df[self.strategy_name] = self.equity_curve['equity_curve']
+        performance_df = (performance_df * 100) - 100
+        performance_fig, performance_ax = plt.subplots()
+        performance_df.plot(ax=performance_ax)
+        performance_ax.set_title('Performance')
+        performance_ax.set_xlabel('Time')
+        performance_ax.set_ylabel('Return (%)')
+
+    def plot_all(self):
         style.use('ggplot')
-        dataframe.plot()
-        plt.title('Performance')
-        plt.xlabel('Time')
-        plt.ylabel('Return (%)')
+        self.create_equity_curve_dataframe()
+        self.plot_performance()
         plt.show()
