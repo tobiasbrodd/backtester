@@ -2,21 +2,24 @@ import queue
 import time
 from datetime import datetime
 from event import MarketEvent, SignalEvent, OrderEvent, FillEvent
-from data import HistoricCSVDataHandler
+from data import HistoricCSVDataHandler, DataSource
 from strategies.hold import BuyAndHoldStrategy, SellAndHoldStrategy
-from strategies.macd import MovingAveragesLongStrategy, MovingAveragesLongShortStrategy
+from strategies.macd import MovingAveragesLongStrategy, MovingAveragesLongShortStrategy, MovingAveragesMomentumStrategy
 from strategies.stop_loss import StopLossStrategy
+from strategies.divide_conquer import DivideAndConquerStrategy
 from portfolio import NaivePortfolio
 from execution import SimulateExecutionHandler
 
 events = queue.Queue()
-data = HistoricCSVDataHandler(events, 'csv/', ['OMXS30'])
-portfolio = NaivePortfolio(data, events, '', initial_capital=1500)
+data = HistoricCSVDataHandler(events, 'csv/', ['OMXS30'], DataSource.NASDAQ)
+portfolio = NaivePortfolio(data, events, '', initial_capital=100000)
 # strategy = BuyAndHoldStrategy(data, events, portfolio)
 # strategy = SellAndHoldStrategy(data, events, portfolio)
-strategy = MovingAveragesLongStrategy(data, events, portfolio, 100, 200)
+# strategy = MovingAveragesLongStrategy(data, events, portfolio, 100, 200)
 # strategy = MovingAveragesLongShortStrategy(data, events, portfolio, 100, 200)
+# strategy = MovingAveragesMomentumStrategy(data, events, portfolio, 100, 200)
 # strategy = StopLossStrategy(data, events, portfolio, 0.9)
+strategy = DivideAndConquerStrategy(data, events, portfolio)
 portfolio.strategy_name = strategy.name
 broker = SimulateExecutionHandler(events)
 
@@ -47,4 +50,4 @@ while True:
 stats = portfolio.output_summary_stats()
 for stat in stats:
     print(stat[0] + ": " + stat[1])
-portfolio.plot_performance()
+portfolio.plot_all()
