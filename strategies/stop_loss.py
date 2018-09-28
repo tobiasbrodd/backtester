@@ -47,7 +47,7 @@ class StopLossStrategy(Strategy):
                     elif self.bought[symbol] == True:
                         if latest_close <= self.stop_loss[symbol]:
                             quantity = self.portfolio.current_positions[symbol]
-                            signal = SignalEvent(symbol, data[0][self.data.time_col], 'EXIT', quantity)
+                            signal = SignalEvent(symbol, data[-1][self.data.time_col], 'EXIT', quantity)
                             self.events.put(signal)
                             self.bought[symbol] = False
                             print("Exit:", data[-1][self.data.time_col], latest_close)
@@ -57,4 +57,3 @@ class StopLossStrategy(Strategy):
                             if data is not None and len(data) > 1:
                                 if data[-1][self.data.price_col] > data[0][self.data.price_col] and self.stop_loss_percentage * data[-1][self.data.price_col] > self.stop_loss[symbol]:
                                     self.stop_loss[symbol] = self.stop_loss_percentage * data[-1][self.data.price_col]
-                                    print("Stop Loss:", self.stop_loss[symbol])
