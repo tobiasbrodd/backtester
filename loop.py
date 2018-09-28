@@ -3,18 +3,20 @@ import time
 from datetime import datetime
 from event import MarketEvent, SignalEvent, OrderEvent, FillEvent
 from data import HistoricCSVDataHandler
-from strategy import BuyAndHoldStrategy, SellAndHoldStrategy, MovingAveragesLongStrategy, MovingAveragesLongShortStrategy, StopLossStrategy
+from strategies.hold import BuyAndHoldStrategy, SellAndHoldStrategy
+from strategies.macd import MovingAveragesLongStrategy, MovingAveragesLongShortStrategy
+from strategies.stop_loss import StopLossStrategy
 from portfolio import NaivePortfolio
 from execution import SimulateExecutionHandler
 
 events = queue.Queue()
 data = HistoricCSVDataHandler(events, 'csv/', ['OMXS30'])
-portfolio = NaivePortfolio(data, events, '', initial_capital=1211.790)
+portfolio = NaivePortfolio(data, events, '', initial_capital=1500)
 # strategy = BuyAndHoldStrategy(data, events, portfolio)
-strategy = SellAndHoldStrategy(data, events, portfolio)
-# strategy = MovingAveragesLongStrategy(data, events, portfolio, 100, 200)
+# strategy = SellAndHoldStrategy(data, events, portfolio)
+strategy = MovingAveragesLongStrategy(data, events, portfolio, 100, 200)
 # strategy = MovingAveragesLongShortStrategy(data, events, portfolio, 100, 200)
-# strategy = StopLossStrategy(data, events, portfolio)
+# strategy = StopLossStrategy(data, events, portfolio, 0.9)
 portfolio.strategy_name = strategy.name
 broker = SimulateExecutionHandler(events)
 
