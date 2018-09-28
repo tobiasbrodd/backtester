@@ -5,6 +5,11 @@ import queue
 from abc import ABCMeta, abstractmethod
 from event import MarketEvent
 from datetime import datetime
+from enum import Enum
+
+class DataSource(Enum):
+    NASDAQ = "NASDAQ"
+    YAHOO = "YAHOO"
 
 class DataHandler(metaclass=ABCMeta):
     __metaclass__ = ABCMeta
@@ -18,7 +23,7 @@ class DataHandler(metaclass=ABCMeta):
         raise NotImplementedError
 
 class HistoricCSVDataHandler(DataHandler):
-    def __init__(self, events, csv_dir, symbol_list):
+    def __init__(self, events, csv_dir, symbol_list, source=DataSource.NASDAQ):
         self.events = events
         self.csv_dir = csv_dir
         self.symbol_list = symbol_list
@@ -31,12 +36,15 @@ class HistoricCSVDataHandler(DataHandler):
         self.time_col = 1
         self.price_col = 6
 
-        self._open_convert_csv_files()
+        self._open_convert_csv_files(source)
 
-    def _open_convert_csv_files(self):
+    def _open_convert_csv_files(self, source):
         combined_index = None
         for symbol in self.symbol_list:
-            self.parse_nasdaq_csv(symbol)
+            if source == DataSource.NASDAQ:
+                self.parse_nasdaq_csv(symbol)
+            else:
+                self.parse_yahoo_csv(symbol)
 
             if combined_index is None:
                 combined_index = self.symbol_data[symbol].index
