@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 def calculate_sharpe_ratio(returns, periods=252):
-    return (periods * np.mean(returns)) / (np.sqrt(periods) * np.std(returns))
+    return (np.sqrt(periods) * np.mean(returns)) / np.std(returns)
 
 def calculate_drawdowns(equity_curve):
     hwm = [0]
