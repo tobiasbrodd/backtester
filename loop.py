@@ -12,14 +12,14 @@ from execution import SimulateExecutionHandler
 
 events = queue.Queue()
 data = HistoricCSVDataHandler(events, 'csv/', ['OMXS30'], DataSource.NASDAQ)
-portfolio = NaivePortfolio(data, events, '', initial_capital=100000)
+portfolio = NaivePortfolio(data, events, '', initial_capital=2000)
 # strategy = BuyAndHoldStrategy(data, events, portfolio)
 # strategy = SellAndHoldStrategy(data, events, portfolio)
-# strategy = MovingAveragesLongStrategy(data, events, portfolio, 100, 200)
-# strategy = MovingAveragesLongShortStrategy(data, events, portfolio, 100, 200)
+strategy = MovingAveragesLongStrategy(data, events, portfolio, 100, 200, version=2)
+# strategy = MovingAveragesLongShortStrategy(data, events, portfolio, 100, 200, version=1)
 # strategy = MovingAveragesMomentumStrategy(data, events, portfolio, 100, 200)
 # strategy = StopLossStrategy(data, events, portfolio, 0.9)
-strategy = DivideAndConquerStrategy(data, events, portfolio)
+# strategy = DivideAndConquerStrategy(data, events, portfolio)
 portfolio.strategy_name = strategy.name
 broker = SimulateExecutionHandler(events)
 
@@ -50,4 +50,6 @@ while True:
 stats = portfolio.output_summary_stats()
 for stat in stats:
     print(stat[0] + ": " + stat[1])
+
+strategy.plot()
 portfolio.plot_all()
