@@ -31,6 +31,7 @@ class HistoricCSVDataHandler(DataHandler):
         self.symbol_data = {}
         self.symbol_dataframe = {}
         self.latest_symbol_data = {}
+        self.all_data = {}
         self.continue_backtest = True
 
         self.time_col = 1
@@ -55,6 +56,7 @@ class HistoricCSVDataHandler(DataHandler):
 
         for symbol in self.symbol_list:
             self.symbol_dataframe[symbol] = self.symbol_data[symbol].reindex(index=combined_index, method='pad')
+            self.all_data[symbol] = self.symbol_dataframe[symbol].copy()
             self.symbol_data[symbol] = self.symbol_dataframe[symbol].iterrows()
 
     def _get_new_data(self, symbol):
