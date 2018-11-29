@@ -160,4 +160,5 @@ class NaivePortfolio(Portfolio):
         style.use('ggplot')
         self.create_equity_curve_dataframe()
         self.plot_performance()
+        self.plot_holdings()
         plt.show()
