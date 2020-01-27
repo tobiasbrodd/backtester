@@ -123,7 +123,7 @@ class NaivePortfolio(Portfolio):
         self.equity_curve = curve
         self.holdings_curve = curve['total']
 
-    def output_summary_stats(self):
+    def summary_stats(self):
         self.create_equity_curve_dataframe()
         total_return = self.equity_curve['equity_curve'][-1]
         returns = self.equity_curve['returns']
