@@ -10,11 +10,12 @@ class ExecutionHandler(metaclass=ABCMeta):
         raise NotImplementedError
 
 class SimulateExecutionHandler(ExecutionHandler):
-    def __init__(self, events):
+    def __init__(self, events, verbose=False):
         self.events = events
+        self.verbose = verbose
 
     def execute_order(self, event):
         if event.type == 'ORDER':
-            print("Order Executed:", event.symbol, event.quantity, event.direction)
+            if self.verbose: print("Order Executed:", event.symbol, event.quantity, event.direction)
             fill_event = FillEvent(datetime.utcnow(), event.symbol, 'ARCA', event.quantity, event.direction, 0)
             self.events.put(fill_event)
