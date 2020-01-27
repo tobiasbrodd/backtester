@@ -16,11 +16,11 @@ class DivideAndConquerStrategy(Strategy):
         if event.type == 'MARKET':
             for symbol in self.symbol_list:
                 data = self.data.get_latest_data(symbol, N=7)
-                df = pd.DataFrame(data, columns=['symbol','datetime','open','high','low','close','adj_close','volume'])
-                df = df.drop(['symbol'], axis=1)
-                df.set_index('datetime', inplace=True)
+                df = pd.DataFrame(data, columns=['Symbol','Date','Close'])
+                df = df.drop(['Symbol'], axis=1)
+                df.set_index('Date', inplace=True)
                 if data is not None and len(data) > 0:
-                    mean = df['adj_close'].pct_change().mean()
+                    mean = df['Close'].pct_change().mean()
                     latest_close = data[-1][self.data.price_col]
                     if mean < 0:
                         quantity = math.floor(self.portfolio.current_holdings['cash'] / (2*latest_close))
